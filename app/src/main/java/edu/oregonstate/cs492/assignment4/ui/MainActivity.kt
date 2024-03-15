@@ -2,16 +2,11 @@ package edu.oregonstate.cs492.assignment4.ui
 
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
-import androidx.core.view.MenuProvider
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.lifecycle.Lifecycle
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
@@ -53,7 +48,6 @@ import edu.oregonstate.cs492.assignment4.data.SavedCity
 class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfig: AppBarConfiguration
     private val savedCityViewModel: SavedCityViewModel by viewModels()
-    private val currentWeatherViewModel: CurrentWeatherViewModel by viewModels()
 
     private lateinit var prefs: SharedPreferences
     private lateinit var drawerLayout: DrawerLayout
@@ -82,6 +76,27 @@ class MainActivity : AppCompatActivity() {
             addCitiesToNavDrawer(savedCities)
 
             navController.navigate(R.id.navigate_to_current_weather)
+        }
+
+        val navView = findViewById<NavigationView>(R.id.nav_view)
+        navView.setNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.new_city -> {
+                    val dialogFragment = AddCityDialogFragment()
+                    dialogFragment.show(supportFragmentManager, "AddNewCity")
+                }
+                R.id.current_weather -> {
+                    navController.navigate(R.id.navigate_to_current_weather)
+                }
+                R.id.five_day_forecast -> {
+                    navController.navigate(R.id.navigate_to_five_day_forecast)
+                }
+                R.id.settings -> {
+                    navController.navigate(R.id.navigate_to_settings)
+                }
+            }
+            drawerLayout.closeDrawer(GravityCompat.START)
+            true
         }
     }
 
@@ -115,6 +130,5 @@ class MainActivity : AppCompatActivity() {
                 true
             }
         }
-
     }
 }

@@ -9,6 +9,10 @@
         android:id="@+id/navigate_to_current_weather"
         app:destination="@+id/current_weather" />
 
+    <action
+        android:id="@+id/navigate_to_settings"
+        app:destination="@id/settings" />
+
     <fragment
         android:id="@+id/current_weather"
         android:label="@string/label_current_weather"
@@ -28,8 +32,9 @@
         android:label="@string/label_settings"
         android:name="edu.oregonstate.cs492.assignment4.ui.SettingsFragment" />
 
-    <action
-        android:id="@+id/navigate_to_settings"
-        app:destination="@id/settings" />
+    <fragment
+        android:id="@+id/new_city"
+        android:label="@string/label_add_city"
+        android:name="edu.oregonstate.cs492.assignment4.ui.AddCityDialogFragment" />
 
 </navigation>
