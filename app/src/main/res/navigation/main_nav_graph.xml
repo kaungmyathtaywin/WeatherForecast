@@ -5,6 +5,10 @@
     android:id="@+id/main_nav_graph"
     app:startDestination="@id/current_weather">
 
+    <action
+        android:id="@+id/navigate_to_current_weather"
+        app:destination="@+id/current_weather" />
+
     <fragment
         android:id="@+id/current_weather"
         android:label="@string/label_current_weather"

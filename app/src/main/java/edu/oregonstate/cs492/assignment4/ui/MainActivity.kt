@@ -1,5 +1,6 @@
 package edu.oregonstate.cs492.assignment4.ui
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
@@ -7,6 +8,7 @@ import android.view.MenuItem
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.GravityCompat
 import androidx.core.view.MenuProvider
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Lifecycle
@@ -16,6 +18,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import androidx.preference.PreferenceManager
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.navigation.NavigationView
 import edu.oregonstate.cs492.assignment4.R
@@ -49,18 +52,24 @@ import edu.oregonstate.cs492.assignment4.data.SavedCity
 
 class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfig: AppBarConfiguration
-    private val viewModel: SavedCityViewModel by viewModels()
+    private val savedCityViewModel: SavedCityViewModel by viewModels()
+    private val currentWeatherViewModel: CurrentWeatherViewModel by viewModels()
+
+    private lateinit var prefs: SharedPreferences
+    private lateinit var drawerLayout: DrawerLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        prefs = PreferenceManager.getDefaultSharedPreferences(this)
+
         val navHostFragment = supportFragmentManager.findFragmentById(
             R.id.nav_host_fragment
         ) as NavHostFragment
         val navController = navHostFragment.navController
-        val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
+        drawerLayout = findViewById(R.id.drawer_layout)
         appBarConfig = AppBarConfiguration(navController.graph, drawerLayout)
 
         val appBar: MaterialToolbar = findViewById(R.id.top_app_bar)
@@ -69,8 +78,10 @@ class MainActivity : AppCompatActivity() {
 
         findViewById<NavigationView>(R.id.nav_view).setupWithNavController(navController)
 
-        viewModel.savedCities.observe(this) {savedCities ->
+        savedCityViewModel.savedCities.observe(this) {savedCities ->
             addCitiesToNavDrawer(savedCities)
+
+            navController.navigate(R.id.navigate_to_current_weather)
         }
     }
 
@@ -81,13 +92,28 @@ class MainActivity : AppCompatActivity() {
 
     private fun addCitiesToNavDrawer(cities: List<SavedCity>) {
         val sortedCities = cities.sortedByDescending { it.timeStamp }
+        prefs = PreferenceManager.getDefaultSharedPreferences(this)
 
+        drawerLayout = findViewById(R.id.drawer_layout)
         val navView: NavigationView = findViewById(R.id.nav_view)
+
         val subMenu = navView.menu.findItem(R.id.dynamic_menu).subMenu
         subMenu?.clear()
 
         for (city in sortedCities) {
-            subMenu?.add(city.cityName)
+            subMenu?.add(city.cityName)?.setOnMenuItemClickListener {
+                drawerLayout.closeDrawer(GravityCompat.START)
+
+                val editor = prefs.edit()
+                editor.putString(getString(R.string.pref_city_key), city.cityName)
+                editor.apply()
+
+                val timeStamp = System.currentTimeMillis()
+                val updateCity = SavedCity(city.cityName, timeStamp)
+                savedCityViewModel.addNewCity(updateCity)
+                
+                true
+            }
         }
 
     }
