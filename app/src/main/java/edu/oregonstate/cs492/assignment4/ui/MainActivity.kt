@@ -7,13 +7,16 @@ import android.view.MenuItem
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuProvider
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.navigation.NavigationView
 import edu.oregonstate.cs492.assignment4.R
 
 /*
@@ -54,36 +57,14 @@ class MainActivity : AppCompatActivity() {
             R.id.nav_host_fragment
         ) as NavHostFragment
         val navController = navHostFragment.navController
-        appBarConfig = AppBarConfiguration(navController.graph)
+        val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
+        appBarConfig = AppBarConfiguration(navController.graph, drawerLayout)
 
         val appBar: MaterialToolbar = findViewById(R.id.top_app_bar)
         setSupportActionBar(appBar)
         setupActionBarWithNavController(navController, appBarConfig)
 
-        /*
-         * Set up a MenuProvider to provide and handle app bar actions for all screens under this
-         * activity.
-         */
-        addMenuProvider(
-            object : MenuProvider {
-                override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                    menuInflater.inflate(R.menu.main_menu, menu)
-                }
-
-                override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                    return when (menuItem.itemId) {
-                        R.id.action_settings -> {
-                            findNavController(R.id.nav_host_fragment).navigate(R.id.settings)
-                            true
-                        }
-                        else -> false
-                    }
-                }
-
-            },
-            this,
-            Lifecycle.State.STARTED
-        )
+        findViewById<NavigationView>(R.id.nav_view).setupWithNavController(navController)
     }
 
     override fun onSupportNavigateUp(): Boolean {
