@@ -5,6 +5,7 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuProvider
 import androidx.drawerlayout.widget.DrawerLayout
@@ -18,6 +19,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.navigation.NavigationView
 import edu.oregonstate.cs492.assignment4.R
+import edu.oregonstate.cs492.assignment4.data.SavedCity
 
 /*
  * Often, we'll have sensitive values associated with our code, like API keys, that we'll want to
@@ -47,6 +49,7 @@ import edu.oregonstate.cs492.assignment4.R
 
 class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfig: AppBarConfiguration
+    private val viewModel: SavedCityViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
@@ -65,10 +68,27 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfig)
 
         findViewById<NavigationView>(R.id.nav_view).setupWithNavController(navController)
+
+        viewModel.savedCities.observe(this) {savedCities ->
+            addCitiesToNavDrawer(savedCities)
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment)
         return navController.navigateUp(appBarConfig) || super.onSupportNavigateUp()
+    }
+
+    private fun addCitiesToNavDrawer(cities: List<SavedCity>) {
+        val sortedCities = cities.sortedByDescending { it.timeStamp }
+
+        val navView: NavigationView = findViewById(R.id.nav_view)
+        val subMenu = navView.menu.findItem(R.id.dynamic_menu).subMenu
+        subMenu?.clear()
+
+        for (city in sortedCities) {
+            subMenu?.add(city.cityName)
+        }
+
     }
 }

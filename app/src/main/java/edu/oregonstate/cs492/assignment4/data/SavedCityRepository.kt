@@ -6,4 +6,6 @@ class SavedCityRepository(
     suspend fun insertNewCity(city: SavedCity) = dao.insert(city)
 
     suspend fun deleteSavedCity(city: SavedCity) = dao.delete(city)
+
+    fun getAllSavedCities() = dao.getAllCities()
 }
