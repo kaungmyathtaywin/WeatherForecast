@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import edu.oregonstate.cs492.assignment4.data.CurrentWeatherRepository
+import edu.oregonstate.cs492.assignment4.data.ForecastCity
 import edu.oregonstate.cs492.assignment4.data.ForecastPeriod
 import edu.oregonstate.cs492.assignment4.data.OpenWeatherService
 import kotlinx.coroutines.launch
@@ -21,12 +22,14 @@ class CurrentWeatherViewModel: ViewModel() {
      * public `forecast` property below.
      */
     private val _weather = MutableLiveData<ForecastPeriod?>(null)
+    private val _city = MutableLiveData<ForecastCity?>(null)
 
     /**
      * This value provides the most recent response from the OpenWeather current weather API.
      * It is null if there are no current results (e.g. in the case of an error).
      */
     val weather: LiveData<ForecastPeriod?> = _weather
+    val city: LiveData<ForecastCity?> = _city
 
     /*
      * The current error for the most recent API query is stored in this private property.  This
@@ -76,6 +79,16 @@ class CurrentWeatherViewModel: ViewModel() {
             _loading.value = false
             _error.value = result.exceptionOrNull()
             _weather.value = result.getOrNull()
+        }
+    }
+
+    fun loadWeatherByCoordinates(lat: Double, lon: Double, apiKey: String) {
+        viewModelScope.launch {
+            _loading.value = true
+            val result = repository.loadCurrentWeatherByCoordinates(lat, lon, apiKey)
+            _loading.value = false
+            _error.value = result.exceptionOrNull()
+            _city.value = result.getOrNull()
         }
     }
 }

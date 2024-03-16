@@ -20,6 +20,10 @@
         android:title="@string/label_add_city"
         android:icon="@drawable/ic_action_add_city"/>
     <item
+        android:id="@+id/current_location"
+        android:title="@string/label_current_location"
+        android:icon="@drawable/ic_action_current_location"/>
+    <item
         android:id="@+id/dynamic_menu"
         android:title="@string/label_saved_cities">
         <menu></menu>

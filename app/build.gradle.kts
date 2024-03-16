@@ -74,6 +74,7 @@ dependencies {
     implementation("com.google.devtools.ksp:symbol-processing-api:1.9.22-1.0.17")
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+    implementation("com.google.android.gms:play-services-location:21.2.0")
 
     ksp("com.squareup.moshi:moshi-kotlin-codegen:1.15.0")
     ksp("androidx.room:room-compiler:2.6.1")

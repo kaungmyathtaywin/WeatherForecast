@@ -55,6 +55,14 @@ interface OpenWeatherService {
         @Query("appid") apiKey: String
     ) : Response<ForecastPeriod>
 
+    @GET("weather")
+    suspend fun loadCurrentWeatherByCoordinates(
+        @Query("lat") lat: Double,
+        @Query("lon") lon: Double,
+        @Query("appid") apiKey: String,
+        @Query("units") units: String? = null
+    ): Response<ForecastCity>
+
     companion object {
         private const val BASE_URL = "https://api.openweathermap.org/data/2.5/"
 

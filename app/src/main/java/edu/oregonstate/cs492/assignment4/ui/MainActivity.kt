@@ -1,10 +1,19 @@
 package edu.oregonstate.cs492.assignment4.ui
 
+import android.Manifest
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
+import android.location.Location
+import android.location.LocationRequest
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
@@ -14,6 +23,11 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.preference.PreferenceManager
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.Priority
+import com.google.android.gms.tasks.CancellationToken
+import com.google.android.gms.tasks.CancellationTokenSource
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.navigation.NavigationView
 import edu.oregonstate.cs492.assignment4.R
@@ -46,11 +60,15 @@ import edu.oregonstate.cs492.assignment4.data.SavedCity
  */
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var appBarConfig: AppBarConfiguration
     private val savedCityViewModel: SavedCityViewModel by viewModels()
+    private val currentWeatherViewModel: CurrentWeatherViewModel by viewModels()
 
+    private lateinit var appBarConfig: AppBarConfiguration
     private lateinit var prefs: SharedPreferences
     private lateinit var drawerLayout: DrawerLayout
+
+    private lateinit var locationPermissionRequest: ActivityResultLauncher<Array<String>>
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
@@ -78,6 +96,21 @@ class MainActivity : AppCompatActivity() {
             navController.navigate(R.id.navigate_to_current_weather)
         }
 
+        locationPermissionRequest = registerForActivityResult(
+            ActivityResultContracts.RequestMultiplePermissions()
+        ) { permissions ->
+            when {
+                permissions[Manifest.permission.ACCESS_COARSE_LOCATION] ?: false -> {
+                    // Permission is granted. Continue with location access.
+                    getCurrentLocationAndWeather()
+                }
+                else -> {
+                    // Permission is denied. Handle the failure.
+                }
+            }
+        }
+
+
         val navView = findViewById<NavigationView>(R.id.nav_view)
         navView.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
@@ -93,6 +126,12 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.settings -> {
                     navController.navigate(R.id.navigate_to_settings)
+                }
+                R.id.current_location -> {
+                    requestLocationPermission()
+                    getCurrentLocationAndWeather()
+
+                    navController.navigate(R.id.navigate_to_current_weather)
                 }
             }
             drawerLayout.closeDrawer(GravityCompat.START)
@@ -131,4 +170,42 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+    private fun requestLocationPermission() {
+        Log.d("MainActivity", "Requesting location permissions")
+        locationPermissionRequest.launch(
+            arrayOf(
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            )
+        )
+    }
+
+    private fun getCurrentLocationAndWeather() {
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestLocationPermission()
+            return
+        }
+
+        val cancellationToken = CancellationTokenSource()
+
+        fusedLocationClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, cancellationToken.token).addOnSuccessListener { location: Location? ->
+            location?.let {
+                Log.d("MainActivity", "Lat ${it.latitude}, Long ${it.longitude}")
+//                currentWeatherViewModel.loadWeatherByCoordinates(it.latitude, it.longitude, getString(R.string.openweather_api_key))
+                prefs = PreferenceManager.getDefaultSharedPreferences(this)
+
+                val editor = prefs.edit()
+                editor.putString(getString(R.string.pref_city_key), "MountainView")
+                editor.apply()
+
+            } ?: run {
+                Log.d("MainActivity", "Location is null")
+            }
+        }.addOnFailureListener {
+            Log.d("MainActivity", "Failed to fetch location")
+        }
+    }
+
 }

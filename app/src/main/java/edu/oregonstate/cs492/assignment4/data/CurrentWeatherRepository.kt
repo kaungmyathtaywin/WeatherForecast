@@ -80,6 +80,22 @@ class CurrentWeatherRepository (
         }
     }
 
+    suspend fun loadCurrentWeatherByCoordinates(lat: Double, lon: Double, apiKey: String, units: String? = null): Result<ForecastCity?> {
+        return withContext(ioDispatcher) {
+            try {
+                val response = service.loadCurrentWeatherByCoordinates(lat, lon, apiKey, units)
+                if (response.isSuccessful) {
+                    val weather = response.body()
+                    Result.success(weather)
+                } else {
+                    Result.failure(Exception(response.errorBody()?.string()))
+                }
+            } catch (e: Exception) {
+                Result.failure(e)
+            }
+        }
+    }
+
     /**
      * Determines whether the weather should be fetched by making a new HTTP call or whether
      * the cached weather can be returned.  The cached weather should be used if the requested
