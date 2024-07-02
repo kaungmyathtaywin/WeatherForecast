@@ -3,7 +3,9 @@
 
 # Weather Application
 
-![Demo](./demo/five-day.gif)
+<p align="center">
+  <img src="./demo/five-day.gif" alt="Demo GIF" width="250px" height="auto"/>
+</p>
 
 
 <!-- Project Overview -->
