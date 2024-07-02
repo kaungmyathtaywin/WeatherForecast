@@ -110,42 +110,6 @@ This project is licensed under the MIT license. See LICENSE.txt for more informa
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://www.linkedin.com/in/kaung-myat-htay-win-258ab9251/
 
-[HTML5]: https://img.shields.io/badge/html5-%23E44D26?style=for-the-badge&logo=html5&logoColor=white
-[HTML5-url]: https://developer.mozilla.org/en-US/docs/Web/HTML
-
-[CSS3]: https://img.shields.io/badge/css3-%23254DE4?style=for-the-badge&logo=css3&logoColor=white
-[CSS3-url]: https://developer.mozilla.org/en-US/docs/Web/CSS
-
-[JavaScript]: https://img.shields.io/badge/javascript-%23F0D91C?style=for-the-badge&logo=javascript&logoColor=white&logoSize=auto
-[JavaScript-url]: https://developer.mozilla.org/en-US/docs/Web/JavaScript
-
-[Bootstrap5]: https://img.shields.io/badge/bootstrap5-%238414F8?style=for-the-badge&logo=bootstrap&logoColor=white&logoSize=auto
-[Bootstrap5-url]: https://getbootstrap.com/docs/5.0/getting-started/introduction/
-
-[Node.js]: https://img.shields.io/badge/node.js-green?style=for-the-badge&logo=nodedotjs&logoColor=white&logoSize=auto
-[Node-url]: https://nodejs.org/en
-
-[Express.js]: https://img.shields.io/badge/express.js-000000?style=for-the-badge&logo=express&logoColor=white&logoSize=auto
-[Express-url]: https://expressjs.com/
-
-[MongoDB]: https://img.shields.io/badge/mongodb-4FAA41?style=for-the-badge&logo=mongodb&logoColor=white&logoSize=auto
-[MongoDB-url]: https://www.mongodb.com/
-
-[Redis]: https://img.shields.io/badge/redis-e30007?style=for-the-badge&logo=redis&logoColor=white&logoSize=auto
-[Redis-url]: https://redis.io/
-
-[RabbitMQ]: https://img.shields.io/badge/rabbitmq-ff6600?style=for-the-badge&logo=rabbitmq&logoColor=white&logoSize=auto
-[RabbitMQ-url]: https://www.rabbitmq.com/
-
-[JWT]:https://img.shields.io/badge/jwt-000000?style=for-the-badge&logoColor=white&logoSize=auto
-[JWT-url]: https://jwt.io/
-
-[Docker]: https://img.shields.io/badge/docker-blue?style=for-the-badge&logo=docker&logoColor=white&logoSize=auto
-[Docker-url]: https://www.docker.com/
-
-[AWS ECS]: https://img.shields.io/badge/aws_ecs-000000?style=for-the-badge&logo=awsfargate&logoColor=white&logoSize=auto
-[AWS-url]: https://aws.amazon.com/ecs/
-
 [Kotlin]: https://img.shields.io/badge/kotlin-%23C21EF0?style=for-the-badge&logo=kotlin&logoColor=white&logoSize=auto
 [Kotlin-url]: https://kotlinlang.org/
 
