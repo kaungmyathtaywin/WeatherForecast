@@ -2,10 +2,13 @@
 [![LinkedIn][linkedin-shield]][linkedin-url]
 
 # Weather Application
-<video width="320" height="240" controls>
-  <source src="./app-demo.webm" type="video/webm">
-  Your browser does not support the video tag.
-</video>
+
+<p align="center">
+  <img src="demo/five-day.gif" alt="Add City Demo" width="23%" style="margin-right: 1%;" />
+  <img src="demo/city-change.gif" alt="City Change Demo" width="23%" style="margin-right: 1%;" />
+  <img src="demo/add-city.gif" alt="Five Day Forecast Demo" width="23%" style="margin-right: 1%;" />
+  <img src="demo/temp-unit.gif" alt="Temperature Unit Change Demo" width="23%" />
+</p>
 
 
 <!-- Project Overview -->
